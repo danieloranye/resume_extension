@@ -1,0 +1,16 @@
+# OS specific files
+Thumbs.db
+Desktop.ini
+
+# Environment variables
+.env
+.env.local
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Extension specific
+*.zip
+*.pem
