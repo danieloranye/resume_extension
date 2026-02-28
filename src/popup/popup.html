@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Resume Tailor</title>
+    <link rel="stylesheet" href="popup.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <header>
+            <h1>AI Resume Tailor</h1>
+            <button id="settingsBtn" title="Settings">⚙️</button>
+        </header>
+
+        <main>
+            <div id="setupView" class="view hidden">
+                <p>Welcome! Let's get started by setting up your AI preferences.</p>
+                <button id="startSetup">Setup API Key</button>
+            </div>
+
+            <div id="settingsView" class="view hidden">
+                <div class="action-card">
+                    <h2>API Configuration</h2>
+                    <div class="form-group">
+                        <label>Provider</label>
+                        <select id="providerSelect">
+                            <option value="gemini">Google Gemini</option>
+                            <option value="openai" disabled>OpenAI (Coming Soon)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>API Key</label>
+                        <input type="password" id="apiKeyInput" placeholder="Enter your Gemini API Key">
+                    </div>
+                    <button id="saveSettings" class="primary">Save Settings</button>
+                    <button id="backToMain" class="secondary">Back</button>
+                </div>
+            </div>
+
+            <div id="resultsView" class="view hidden">
+                <div class="action-card">
+                    <h2>Tailored Result</h2>
+                    <div class="tabs">
+                        <button class="tab-btn active" data-tab="resume">Resume</button>
+                        <button class="tab-btn" data-tab="cover">Cover Letter</button>
+                    </div>
+                    <div id="resultContent" class="result-card"></div>
+                    <button id="copyBtn" class="primary" style="margin-top: 12px;">Copy to Clipboard</button>
+                    <button id="backFromResults" class="secondary">Back</button>
+                </div>
+            </div>
+
+            <div id="mainView" class="view">
+                <div class="action-card">
+                    <h2>Current Job</h2>
+                    <div id="jobStatus">No job description extracted yet.</div>
+                    <button id="extractBtn" class="primary">Extract from Page</button>
+                </div>
+
+                <div class="action-card">
+                    <h2>Resume</h2>
+                    <div class="resume-actions">
+                        <button id="uploadResume">Upload Resume</button>
+                        <button id="tailorBtn" disabled>Tailor Resume</button>
+                    </div>
+                </div>
+
+                <div class="history-section">
+                    <h3>Recent Applications</h3>
+                    <ul id="historyList">
+                        <li class="empty-msg">No history yet.</li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div id="matchScore" class="score-badge">Match: --%</div>
+        </footer>
+    </div>
+    <script src="popup.js" type="module"></script>
+</body>
+
+</html>
