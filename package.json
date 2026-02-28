@@ -1,0 +1,18 @@
+{
+    "name": "resume_extension",
+    "version": "1.0.0",
+    "description": "AI Resume Tailor Chrome Extension",
+    "main": "background.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [
+        "chrome",
+        "extension",
+        "ai",
+        "resume",
+        "career"
+    ],
+    "author": "",
+    "license": "MIT"
+}
