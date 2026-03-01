@@ -1,4 +1,4 @@
-import { GeminiProvider } from './utils/geminiProvider.js';
+import { GeminiProvider } from '../utils/geminiProvider.js';
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "tailorResume") {
