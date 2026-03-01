@@ -4,7 +4,7 @@ export class GeminiProvider extends AIProvider {
     constructor(apiKey) {
         super();
         this.apiKey = apiKey;
-        this.apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent';
+        this.apiUrl = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
     }
 
     async #callGemini(prompt) {
