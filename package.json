@@ -1,6 +1,7 @@
 {
     "name": "resume_extension",
     "version": "1.0.0",
+    "type": "module",
     "description": "AI Resume Tailor Chrome Extension",
     "main": "background.js",
     "scripts": {
