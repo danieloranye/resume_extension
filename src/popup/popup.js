@@ -19,10 +19,19 @@ document.addEventListener('DOMContentLoaded', async () => {
     const modelSelect = document.getElementById('modelSelect');
     const jobStatus = document.getElementById('jobStatus');
     const uploadBtn = document.getElementById('uploadResume');
+    const resumeFileInput = document.getElementById('resumeFileInput');
     const resultContent = document.getElementById('resultContent');
     const matchScoreBadge = document.getElementById('matchScore');
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+    const downloadDocxBtn = document.getElementById('downloadDocxBtn');
 
     let currentResults = null;
+    let currentTab = 'resume';
+
+    // Configure PDF.js worker
+    if (typeof pdfjsLib !== 'undefined') {
+        pdfjsLib.GlobalWorkerOptions.workerSrc = '../libs/pdf.worker.min.js';
+    }
 
     // Load initial state
     const settings = await chrome.storage.local.get(['apiKey', 'provider', 'modelName', 'resumeText', 'lastJobDescription']);
@@ -129,16 +138,79 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    // Resume Upload (Text-based for now)
-    uploadBtn.addEventListener('click', async () => {
-        const resumeText = prompt("Paste your resume text:");
-        if (resumeText) {
-            await chrome.storage.local.set({ resumeText });
-            uploadBtn.textContent = 'Change Resume';
-            const { lastJobDescription } = await chrome.storage.local.get('lastJobDescription');
-            if (lastJobDescription) tailorBtn.disabled = false;
+    // File Upload Logic
+    uploadBtn.addEventListener('click', () => {
+        resumeFileInput.click();
+    });
+
+    resumeFileInput.addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        uploadBtn.textContent = "Reading file...";
+        tailorBtn.disabled = true;
+
+        try {
+            const text = await extractTextFromFile(file);
+            if (text) {
+                await chrome.storage.local.set({ resumeText: text });
+                uploadBtn.textContent = 'Change Resume';
+                const { lastJobDescription } = await chrome.storage.local.get('lastJobDescription');
+                if (lastJobDescription) tailorBtn.disabled = false;
+                alert("Resume uploaded and parsed successfully!");
+            }
+        } catch (err) {
+            console.error("File upload error:", err);
+            alert("Error reading file: " + err.message);
+            uploadBtn.textContent = 'Upload Resume (PDF/DOCX)';
         }
     });
+
+    async function extractTextFromFile(file) {
+        const extension = file.name.split('.').pop().toLowerCase();
+        const reader = new FileReader();
+
+        if (extension === 'pdf') {
+            return new Promise((resolve, reject) => {
+                reader.onload = async () => {
+                    try {
+                        const text = await parsePDF(reader.result);
+                        resolve(text);
+                    } catch (e) { reject(e); }
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+        } else if (extension === 'docx') {
+            return new Promise((resolve, reject) => {
+                reader.onload = async () => {
+                    try {
+                        const result = await mammoth.extractRawText({ arrayBuffer: reader.result });
+                        resolve(result.value);
+                    } catch (e) { reject(e); }
+                };
+                reader.onerror = reject;
+                reader.readAsArrayBuffer(file);
+            });
+        } else {
+            return new Promise((resolve, reject) => {
+                reader.onload = () => resolve(reader.result);
+                reader.onerror = reject;
+                reader.readAsText(file);
+            });
+        }
+    }
+
+    async function parsePDF(data) {
+        const pdf = await pdfjsLib.getDocument({ data }).promise;
+        let fullText = "";
+        for (let i = 1; i <= pdf.numPages; i++) {
+            const page = await pdf.getPage(i);
+            const content = await page.getTextContent();
+            fullText += content.items.map(item => item.str).join(" ") + "\n";
+        }
+        return fullText;
+    }
 
     // Tailoring Logic
     tailorBtn.addEventListener('click', async () => {
@@ -164,6 +236,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             if (response && response.success) {
                 currentResults = response;
+                currentTab = 'resume';
                 resultContent.textContent = response.tailoredResume;
                 matchScoreBadge.textContent = `Match: ${response.score}%`;
                 loadHistory(); // Refresh history list
@@ -179,8 +252,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         btn.addEventListener('click', () => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             btn.classList.add('active');
-            const type = btn.getAttribute('data-tab');
-            resultContent.textContent = type === 'resume' ? currentResults.tailoredResume : currentResults.coverLetter;
+            currentTab = btn.getAttribute('data-tab');
+            resultContent.textContent = currentTab === 'resume' ? currentResults.tailoredResume : currentResults.coverLetter;
         });
     });
 
@@ -191,6 +264,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         const originalText = btn.textContent;
         btn.textContent = "Copied!";
         setTimeout(() => btn.textContent = originalText, 2000);
+    });
+
+    // Download Logic
+    downloadPdfBtn.addEventListener('click', async () => {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const text = resultContent.textContent;
+        const filename = currentTab === 'resume' ? 'tailored_resume.pdf' : 'cover_letter.pdf';
+
+        const splitText = doc.splitTextToSize(text, 180);
+        doc.text(splitText, 15, 15);
+        doc.save(filename);
+    });
+
+    downloadDocxBtn.addEventListener('click', async () => {
+        const text = resultContent.textContent;
+        const filename = currentTab === 'resume' ? 'tailored_resume.docx' : 'cover_letter.docx';
+
+        const doc = new docx.Document({
+            sections: [{
+                properties: {},
+                children: text.split('\n').map(line => new docx.Paragraph({
+                    children: [new docx.TextRun(line)],
+                })),
+            }],
+        });
+
+        const blob = await docx.Packer.toBlob(doc);
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        a.click();
+        URL.revokeObjectURL(url);
     });
 
     // History Logic
@@ -217,6 +324,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             li.addEventListener('click', () => {
                 const item = history.find(h => h.id == li.dataset.id);
                 currentResults = item;
+                currentTab = 'resume';
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                document.querySelector('[data-tab="resume"]').classList.add('active');
                 resultContent.textContent = item.tailoredResume;
                 matchScoreBadge.textContent = `Match: ${item.score}%`;
                 showView('results');

@@ -7,6 +7,10 @@
     <title>AI Resume Tailor</title>
     <link rel="stylesheet" href="popup.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <script src="../libs/pdf.min.js"></script>
+    <script src="../libs/mammoth.browser.min.js"></script>
+    <script src="../libs/jspdf.umd.min.js"></script>
+    <script src="../libs/docx.iife.js"></script>
 </head>
 
 <body>
@@ -65,8 +69,12 @@
                         <button class="tab-btn" data-tab="cover">Cover Letter</button>
                     </div>
                     <div id="resultContent" class="result-card"></div>
-                    <button id="copyBtn" class="primary" style="margin-top: 12px;">Copy to Clipboard</button>
-                    <button id="backFromResults" class="secondary">Back</button>
+                    <div class="download-actions">
+                        <button id="copyBtn" class="primary">Copy Text</button>
+                        <button id="downloadPdfBtn" class="secondary">Download PDF</button>
+                        <button id="downloadDocxBtn" class="secondary">Download DOCX</button>
+                    </div>
+                    <button id="backFromResults" class="secondary" style="margin-top: 12px; width: 100%;">Back</button>
                 </div>
             </div>
 
@@ -80,7 +88,8 @@
                 <div class="action-card">
                     <h2>Resume</h2>
                     <div class="resume-actions">
-                        <button id="uploadResume">Upload Resume</button>
+                        <input type="file" id="resumeFileInput" accept=".pdf,.docx,.txt" class="hidden">
+                        <button id="uploadResume">Upload Resume (PDF/DOCX)</button>
                         <button id="tailorBtn" disabled>Tailor Resume</button>
                     </div>
                 </div>

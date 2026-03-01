@@ -76,7 +76,7 @@ main {
 }
 
 .hidden {
-    display: none;
+    display: none !important;
 }
 
 .action-card {
@@ -207,7 +207,19 @@ button:disabled {
 
 .resume-actions {
     display: flex;
+    flex-direction: column;
     gap: 10px;
+}
+
+.download-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.download-actions button:first-child {
+    grid-column: span 2;
 }
 
 .history-section h3 {
