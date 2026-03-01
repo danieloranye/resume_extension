@@ -1,7 +1,7 @@
 import { AIProvider } from './aiProvider.js';
 
 export class GeminiProvider extends AIProvider {
-    constructor(apiKey, modelName = 'gemini-1.5-flash-latest') {
+    constructor(apiKey, modelName = 'gemini-2.0-flash') {
         super();
         this.apiKey = apiKey;
         this.modelName = modelName;
