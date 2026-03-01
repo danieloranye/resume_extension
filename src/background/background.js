@@ -1,4 +1,5 @@
 import { GeminiProvider } from '../utils/geminiProvider.js';
+import { GroqProvider } from '../utils/groqProvider.js';
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "tailorResume") {
@@ -13,7 +14,9 @@ async function handleTailoring(data) {
     try {
         let provider;
         if (config.provider === 'gemini') {
-            provider = new GeminiProvider(config.apiKey, config.modelName || 'gemini-1.5-flash');
+            provider = new GeminiProvider(config.apiKey, config.modelName || 'gemini-2.0-flash-lite');
+        } else if (config.provider === 'groq') {
+            provider = new GroqProvider(config.apiKey, config.modelName || 'llama-3.1-70b-versatile');
         } else {
             throw new Error("Unsupported AI Provider");
         }

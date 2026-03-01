@@ -32,7 +32,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     } else {
         apiKeyInput.value = settings.apiKey;
         providerSelect.value = settings.provider || 'gemini';
-        modelSelect.value = settings.modelName || 'gemini-1.5-flash';
+        modelSelect.value = settings.modelName || 'gemini-2.0-flash-lite';
+        updateModelVisibility(providerSelect.value);
         showView('main');
         updateMainUI(settings);
     }
@@ -53,10 +54,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    settingsBtn.addEventListener('click', () => showView('settings'));
+    settingsBtn.addEventListener('click', () => {
+        updateModelVisibility(providerSelect.value);
+        showView('settings');
+    });
     backToMainBtn.addEventListener('click', () => showView('main'));
     backFromResultsBtn.addEventListener('click', () => showView('main'));
     document.getElementById('startSetup').addEventListener('click', () => showView('settings'));
+
+    // UI Logic: Model visibility
+    function updateModelVisibility(provider) {
+        const geminiGroup = document.getElementById('geminiModels');
+        const groqGroup = document.getElementById('groqModels');
+
+        if (provider === 'groq') {
+            geminiGroup.classList.add('hidden');
+            groqGroup.classList.remove('hidden');
+            if (modelSelect.value && modelSelect.value.includes('gemini')) {
+                modelSelect.value = 'llama-3.1-70b-versatile';
+            }
+        } else {
+            geminiGroup.classList.remove('hidden');
+            groqGroup.classList.add('hidden');
+            if (modelSelect.value && (modelSelect.value.includes('llama') || modelSelect.value.includes('mixtral'))) {
+                modelSelect.value = 'gemini-2.0-flash-lite';
+            }
+        }
+    }
+
+    providerSelect.addEventListener('change', (e) => updateModelVisibility(e.target.value));
 
     // Settings Logic
     saveSettingsBtn.addEventListener('click', async () => {
