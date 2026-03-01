@@ -39,7 +39,11 @@ export class GroqProvider extends AIProvider {
             },
             {
                 role: "user",
-                content: `Tailor this resume to match the job description provided. Ensure the output is ATS-compliant and highlights relevant keywords.
+                content: `Tailor this resume to match the job description provided. 
+                Marry the existing skills, sections and job experiences with whats required in the Job description. 
+                It's okay to make up experiences but keep it as close as possible to the existing/original resume. 
+                The output should be resume only, do not include any additional comments. 
+                Also, ensure the output is ATS-compliant, highlights relevant keywords, and remains professional.
 
 Original Resume:
 ${originalResume}

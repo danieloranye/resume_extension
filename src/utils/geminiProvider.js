@@ -31,9 +31,11 @@ export class GeminiProvider extends AIProvider {
 
     async generateTailoredResume(originalResume, jobDescription) {
         const prompt = `
-            You are an expert career coach and ATS specialist. 
-            Tailor the following resume to match the job description provided. 
-            Ensure the output is ATS-compliant, highlights relevant keywords, and remains professional.
+            Tailor this resume to match the job description provided. 
+            Marry the existing skills, sections and job experiences with whats required in the Job description. 
+            It's okay to make up experiences but keep it as close as possible to the existing/original resume. 
+            The output should be resume only, do not include any additional comments. 
+            Also, ensure the output is ATS-compliant, highlights relevant keywords, and remains professional.
             
             Original Resume:
             ${originalResume}
