@@ -1,10 +1,12 @@
 import { AIProvider } from './aiProvider.js';
 
 export class GeminiProvider extends AIProvider {
-    constructor(apiKey) {
+    constructor(apiKey, modelName = 'gemini-1.5-flash') {
         super();
         this.apiKey = apiKey;
-        this.apiUrl = 'https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent';
+        this.modelName = modelName;
+        // Use v1beta for better model coverage, fall back to v1 if needed
+        this.apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent`;
     }
 
     async #callGemini(prompt) {

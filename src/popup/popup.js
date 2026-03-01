@@ -16,6 +16,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const backFromResultsBtn = document.getElementById('backFromResults');
     const apiKeyInput = document.getElementById('apiKeyInput');
     const providerSelect = document.getElementById('providerSelect');
+    const modelSelect = document.getElementById('modelSelect');
     const jobStatus = document.getElementById('jobStatus');
     const uploadBtn = document.getElementById('uploadResume');
     const resultContent = document.getElementById('resultContent');
@@ -24,13 +25,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     let currentResults = null;
 
     // Load initial state
-    const settings = await chrome.storage.local.get(['apiKey', 'provider', 'resumeText', 'lastJobDescription']);
+    const settings = await chrome.storage.local.get(['apiKey', 'provider', 'modelName', 'resumeText', 'lastJobDescription']);
 
     if (!settings.apiKey) {
         showView('setup');
     } else {
         apiKeyInput.value = settings.apiKey;
         providerSelect.value = settings.provider || 'gemini';
+        modelSelect.value = settings.modelName || 'gemini-1.5-flash';
         showView('main');
         updateMainUI(settings);
     }
@@ -60,9 +62,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     saveSettingsBtn.addEventListener('click', async () => {
         const apiKey = apiKeyInput.value.trim();
         const provider = providerSelect.value;
+        const modelName = modelSelect.value;
         if (!apiKey) return alert("Please enter an API Key");
 
-        await chrome.storage.local.set({ apiKey, provider });
+        await chrome.storage.local.set({ apiKey, provider, modelName });
         showView('main');
     });
 
@@ -113,7 +116,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // Tailoring Logic
     tailorBtn.addEventListener('click', async () => {
-        const data = await chrome.storage.local.get(['resumeText', 'lastJobDescription', 'apiKey', 'provider']);
+        const data = await chrome.storage.local.get(['resumeText', 'lastJobDescription', 'apiKey', 'provider', 'modelName']);
 
         tailorBtn.disabled = true;
         tailorBtn.textContent = "Tailoring...";
@@ -123,7 +126,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             data: {
                 resumeText: data.resumeText,
                 jobDescription: data.lastJobDescription,
-                config: { apiKey: data.apiKey, provider: data.provider }
+                config: {
+                    apiKey: data.apiKey,
+                    provider: data.provider,
+                    modelName: data.modelName
+                }
             }
         }, (response) => {
             tailorBtn.disabled = false;

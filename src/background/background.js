@@ -13,7 +13,7 @@ async function handleTailoring(data) {
     try {
         let provider;
         if (config.provider === 'gemini') {
-            provider = new GeminiProvider(config.apiKey);
+            provider = new GeminiProvider(config.apiKey, config.modelName || 'gemini-1.5-flash');
         } else {
             throw new Error("Unsupported AI Provider");
         }
