@@ -71,7 +71,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             geminiGroup.classList.add('hidden');
             groqGroup.classList.remove('hidden');
             if (modelSelect.value && modelSelect.value.includes('gemini')) {
-                modelSelect.value = 'llama-3.1-70b-versatile';
+                modelSelect.value = 'llama-3.3-70b-versatile';
             }
         } else {
             geminiGroup.classList.remove('hidden');

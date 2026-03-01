@@ -1,7 +1,7 @@
 import { AIProvider } from './aiProvider.js';
 
 export class GroqProvider extends AIProvider {
-    constructor(apiKey, modelName = 'llama-3.1-70b-versatile') {
+    constructor(apiKey, modelName = 'llama-3.3-70b-versatile') {
         super();
         this.apiKey = apiKey;
         this.modelName = modelName;

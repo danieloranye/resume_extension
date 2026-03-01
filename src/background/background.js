@@ -16,7 +16,7 @@ async function handleTailoring(data) {
         if (config.provider === 'gemini') {
             provider = new GeminiProvider(config.apiKey, config.modelName || 'gemini-2.0-flash-lite');
         } else if (config.provider === 'groq') {
-            provider = new GroqProvider(config.apiKey, config.modelName || 'llama-3.1-70b-versatile');
+            provider = new GroqProvider(config.apiKey, config.modelName || 'llama-3.3-70b-versatile');
         } else {
             throw new Error("Unsupported AI Provider");
         }
