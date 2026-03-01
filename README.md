@@ -1,40 +1,86 @@
 # AI Resume Tailor Chrome Extension
 
-A modern, AI-powered Chrome Extension built to help job seekers tailor their resumes and cover letters to specific job descriptions with one click.
+![Version](https://img.shields.io/badge/version-1.0-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Platform](https://img.shields.io/badge/platform-Chrome-orange)
 
-## 📁 Project Structure
+## 🎯 Overview
+**AI Resume Tailor** is a powerful, modern Chrome Extension designed to give job seekers an unfair advantage. It automates the tedious process of tailoring resumes and cover letters to match specific job descriptions using state-of-the-art AI models from **Google Gemini** and **Groq**.
 
-```text
-resume_extension/
-├── manifest.json         # Extension configuration (permissions, entry points)
-├── icons/                # Extension icons (16x16, 48x48, 128x128)
-├── src/
-│   ├── background/
-│   │   └── background.js # Service worker (handles API calls & storage)
-│   ├── content/
-│   │   └── content.js    # Script that runs on job boards to extract text
-│   ├── popup/            # Main UI (the small window when you click the icon)
-│   │   ├── popup.html
-│   │   ├── popup.css
-│   │   └── popup.js
-│   └── utils/            # Shared logic and AI abstractions
-│       ├── aiProvider.js
-│       └── geminiProvider.js
-├── .gitignore            # Files to exclude from Git (API keys, OS files)
-└── README.md             # Project documentation
-```
+With a focus on **visual excellence** and **ATS optimization**, this tool ensures your applications stand out both to recruiters and automated screening systems.
 
-## 🛠 Features
+---
 
-- **Job Extraction**: Automatically identifies job descriptions on LinkedIn and Indeed.
-- **AI Tailoring**: Uses Gemini Pro to rewrite resumes for ATS optimization.
-- **Match Scoring**: Calculates a keyword match percentage.
-- **Application History**: Saves your previous applications locally.
+## ✨ Key Features
+
+### 🔍 Intelligent Job Extraction
+- One-click extraction of job descriptions from **LinkedIn**, **Indeed**, and other major job boards.
+- Smart selectors and fallback logic to ensure the right content is captured every time.
+
+### 📄 Comprehensive File Support
+- **Upload**: Support for `.pdf`, `.docx`, and `.txt` resume uploads with automated text parsing.
+- **Download**: Export your results as professionally formatted **PDFs** or editable **DOCX** files.
+
+### 🤖 Multi-Provider AI Engine
+- **Google Gemini**: Integration with Gemini 2.0 Flash and Pro for deep reasoning.
+- **Groq Integration**: Ultra-fast tailoring powered by Llama 3.3 70B and Mixtral.
+- **Dynamic Model Selection**: Choose the model that best fits your needs and quota.
+
+### 📈 ATS Optimization & Scoring
+- Structured prompts designed to "marry" your experience with job requirements.
+- Real-time **Match Score** (0-100%) to see how well you align with the role.
+- Keywords and transferable skills are highlighted naturally to pass automated filters.
+
+### 🕒 Application History
+- Automatically saves your last 5 tailored applications.
+- Revisit previous resume versions and cover letters with a single click.
+
+---
+
+## 🎨 Design Philosophy
+The extension features a **Premium Glassmorphism UI**:
+- **Sleek Dark Mode**: Reduces eye strain and feels like a modern developer tool.
+- **Micro-animations**: Smooth transitions between views for a high-end feel.
+- **Inter Typography**: Uses clean, professional Google Fonts for ultimate readability.
+
+---
 
 ## 🚀 Getting Started
 
-1. Clone this repository.
-2. Go to `chrome://extensions/` in your browser.
-3. Enable "Developer mode".
-4. Click "Load unpacked" and select this folder.
-5. Set up your Gemini API key in the extension settings.
+### Installation
+1.  **Clone** this repository:
+    ```bash
+    git clone https://github.com/danieloranye/resume_extension.git
+    ```
+2.  Open Chrome and navigate to `chrome://extensions/`.
+3.  Enable **Developer mode** (toggle in the top right).
+4.  Click **Load unpacked** and select the `resume_extension` folder.
+
+### Configuration
+1.  Click the extension icon in your toolbar.
+2.  Go to **Settings** (⚙️).
+3.  Select your preferred **AI Provider** (Gemini or Groq).
+4.  Enter your **API Key** (links to get keys are provided in the UI).
+5.  Click **Save Settings**.
+
+---
+
+## 🛠 Technology Stack
+- **Core**: JavaScript (ES6+), HTML5, CSS3
+- **AI Integration**: Gemini API, Groq Cloud API
+- **Libraries**:
+  - `pdf.js` (PDF Parsing)
+  - `mammoth.js` (DOCX Parsing)
+  - `jspdf` (PDF Generation)
+  - `docx.js` (DOCX Generation)
+- **Design**: Vanilla CSS with Glassmorphism and Backdrop-filter effects.
+
+---
+
+## 📁 Documentation
+For a deep dive into the code organization, see [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md).
+
+---
+
+## ⚖️ License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
